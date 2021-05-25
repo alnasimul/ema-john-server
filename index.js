@@ -7,8 +7,6 @@ require('dotenv').config();
 const app = express();
 const port = 5000;
 
-console.log(process.env.DB_PASS);
-
 app.use(cors());
 
 app.use(bodyParser.json());
@@ -35,7 +33,9 @@ client.connect(err => {
   })
 
   app.get('/products', (req,res) => {
-    productsCollection.find({})
+    const search = req.query.search;
+    console.log(search)
+    productsCollection.find({name: {$regex: search}})
     .toArray((err,documents) => {
       res.send(documents);
     })
